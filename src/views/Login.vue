@@ -1,6 +1,6 @@
 <template>
   <div class="login hold-transition login-page">
-    <C_Login />
+    <C_Login />    
   </div>
 </template>
 
@@ -11,7 +11,7 @@ import C_Login from '@/components/C_Login.vue'
 export default {
   name: 'Login',
   components: {
-    C_Login
+    C_Login    
   }
 }
 </script>
