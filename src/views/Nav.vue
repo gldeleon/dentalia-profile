@@ -1,7 +1,7 @@
 <template>
 <div>
     <b-navbar id="navb" toggleable="lg" class="flxMenu">
-        <b-button v-b-toggle.sidebar-no-header>
+        <b-button v-b-toggle.sidebar-no-header class="no-button">
             <!-- <b-icon-list ></b-icon-list> -->
         </b-button>
         <b-nav-item-dropdown right class="mginLeft">
@@ -61,5 +61,9 @@ export default {
 }
 .content-wrapper {
     background-color: #006BB7 !important;
+}
+.no-button{
+    background-color: #7ccdff !important;
+    border-color: #7ccdff !important;
 }
 </style>
