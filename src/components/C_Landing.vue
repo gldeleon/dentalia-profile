@@ -67,12 +67,12 @@
                                 </div>
 
                                 <h3 class="profile-username text-center">
-                                  {{nombreCompleto}}
+                                  {{patData.nombreCompleto}}
                                 </h3>
 
-                                <!-- <p class="text-muted text-center">
-                                  Software Engineer
-                                </p> -->
+                                <p class="text-muted text-center">
+                                  
+                                </p>
 
                                 <ul
                                   class="
@@ -83,19 +83,35 @@
                                 >
                                   <li class="list-group-item">
                                     <b>Clave del Paciente</b>
-                                    <a class="float-right">10322</a>
+                                    <a class="float-right">{{patData.idPatient}}</a>
                                   </li>
                                   <li class="list-group-item">
                                     <b>Apellido Paterno</b>
-                                    <a class="float-right">De Leon</a>
+                                    <a class="float-right">{{patData.aPaterno}}</a>
                                   </li>
                                   <li class="list-group-item">
                                     <b>Apellido Materno</b>
-                                    <a class="float-right">Diaz</a>
+                                    <a class="float-right">{{patData.aMaterno}}</a>
                                   </li>
                                   <li class="list-group-item">
                                     <b>Nombre</b>
-                                    <a class="float-right">Diaz</a>
+                                    <a class="float-right">{{patData.nombre}}</a>
+                                  </li>
+                                  <li class="list-group-item">
+                                    <b>Fecha de Nacimiento</b>
+                                    <a class="float-right">{{patData.fnacimiento}}</a>
+                                  </li>
+                                  <li class="list-group-item">
+                                    <b>Plan/Convenio</b>
+                                    <a class="float-right">{{patData.nombrePlan}}</a>
+                                  </li>
+                                  <li class="list-group-item">
+                                    <b>Email</b>
+                                    <a class="float-right">{{patData.email}}</a>
+                                  </li>
+                                   <li class="list-group-item">
+                                    <b>Teléfono</b>
+                                    <a class="float-right">{{patData.telefono}}</a>
                                   </li>
                                 </ul>
                               </div>
@@ -111,7 +127,7 @@
                                   <div class="card-body">
                                     <div class="tab-content">
                                       <b-table 
-                                        fixed: true
+                                        fixed
                                         striped
                                         hover
                                         :items="presupuesto"
@@ -125,7 +141,7 @@
                                   <div class="card-body">
                                     <div class="tab-content">
                                       <b-table
-                                        fixed: true
+                                        fixed
                                         striped
                                         hover
                                         :items="documentos"
@@ -139,7 +155,7 @@
                                   <div class="card-body">
                                     <div class="tab-content">
                                       <b-table
-                                        fixed: true
+                                        fixed
                                         striped
                                         hover
                                         :items="sesiones"
@@ -236,9 +252,10 @@ export default {
     },
     searchPatient() {
       var self = this;
-      self.patientList = false;
+      this.patientList = false;
       this.overlayShow = true;
-      // this.show = true;
+      this.show = false;      
+      this.listPatients = [];
       var headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -254,7 +271,7 @@ export default {
           function (response) {
             if (Object.keys(response.data.data).length > 0) {
               self.patientList = true;
-              var rep = response.data.data;
+              var rep = response.data.data;              
               for (let index = 0; index < rep.length; index++) {
                 self.listPatients.push({
                   name: rep[index].namePerson,
@@ -282,11 +299,23 @@ export default {
         );
     },
     patientInfo(id_patient) {
-      /*traemos la info del paciente*/
+      /*traemos la info del paciente*/      
       this.overlayShow = true;
-      this.patientList = false;
-      this.show = false;
+      this.patientList = false;      
+      this.patData.idPatient= '';
+      this.patData.aPaterno= '';
+      this.patData.aMaterno= '';
+      this.patData.nombre= '';
+      this.patData.nombreCompleto= '';
+      this.patData.fnacimiento='';
+      this.patData.idPlan= '';
+      this.patData.nombrePlan='';
+      this.patData.email= '';
+      this.patData.telefono='';
+      this.documentos = [];
+      this.sesiones = [];
       var self = this;      
+
       var headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -323,15 +352,15 @@ export default {
                 self.documentos.push({
                   No: repDocuments[index].file_number, 
                   Fecha: repDocuments[index].file_date,
-                  Importe: '$ ' + repDocuments[index].file_payment,
-                  Total: '$ ' + repDocuments[index].file_amount,
-                  Saldo: '$ ' + repDocuments[index].pat_balance,
+                  Importe: '$ ' + repDocuments[index].file_payment == null ? 0 : repDocuments[index].file_payment,
+                  Total: '$ ' + repDocuments[index].file_amount == null ? 0 : repDocuments[index].file_amount,
+                  Saldo: '$ ' + repDocuments[index].pat_balance == null ? 0 : repDocuments[index].pat_balance,
                   Sesion:repDocuments[index].id_sesion,
                   Clinica:repDocuments[index].cli_name,
                   Estatus:repDocuments[index].status_id
                 });         
               }
-
+              /**armamos sessiones */
               var repSessions = response.data.data.patSessions;
               for (let index = 0; index < repSessions.length; index++) {
                 self.sesiones.push({
@@ -363,7 +392,6 @@ export default {
             console.log("err", err);
           }
         );
-      this.show = true;
     },
   },
 };

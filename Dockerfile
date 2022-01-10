@@ -25,8 +25,8 @@ RUN apt-get install npm -y
 RUN rm /var/www/html/index.*
 RUN mv /etc/nginx/sites-available/default /etc/nginx/sites-available/default.back
 COPY nginx/nginx.conf /etc/nginx/sites-available/default
-RUN serivce nginx reload
-RUN service nginx restart
+# RUN systemctl reload nginx.service
+# RUN systemctl restart nginx.service
 EXPOSE 80
 COPY dist/ /var/www/html
 CMD ["nginx", "-g", "daemon off;"]
