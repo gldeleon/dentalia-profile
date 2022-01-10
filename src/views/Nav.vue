@@ -2,13 +2,13 @@
 <div>
     <b-navbar id="navb" toggleable="lg" class="flxMenu">
         <b-button v-b-toggle.sidebar-no-header class="no-button">
-            <!-- <b-icon-list ></b-icon-list> -->
+            <!-- <b-icon-list ></b-icon-list> --><span class="nav-title">PACIENTES Y PERFILES</span>
         </b-button>
         <b-nav-item-dropdown right class="mginLeft">
             <!-- Using 'button-content' slot -->
             <template v-slot:button-content >
                 <em>
-                    <b-icon-person-fill ></b-icon-person-fill>
+                    <b-icon-person-fill class="nav-title"></b-icon-person-fill>
                 </em>
             </template>
             <b-dropdown-item disabled='disabled'>{{ usr_name }}</b-dropdown-item>
@@ -65,5 +65,8 @@ export default {
 .no-button{
     background-color: #7ccdff !important;
     border-color: #7ccdff !important;
+}
+.nav-title{
+    color: #000;
 }
 </style>

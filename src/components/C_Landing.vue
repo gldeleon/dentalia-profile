@@ -1,280 +1,384 @@
 <template>
-<div class="wrapper">
-  <C_Nav />
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <h2 class="text-center display-4"></h2>
-      </div>
-    </section>
-    <section class="content">
+  <div class="wrapper">
+    <C_Nav />
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-8 offset-md-2">
-                        <div class="input-group input-group-lg">
-                            <input type="search" class="form-control form-control-lg" placeholder="Nombre de paciente" v-model="searchKeyword" value="">
-                            <div class="input-group-append">
-                                <button @click="buscarPaciente()" class="btn btn-lg btn-default">
-                                    <b-icon icon="search"></b-icon>
-                                </button>
-                            </div>
-                        </div>
+          <h2 class="text-center display-4"></h2>
+        </div>
+      </section>
+      <section class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-8 offset-md-2">
+              <div class="input-group input-group-lg">
+                <input
+                  type="search"
+                  class="form-control form-control-lg"
+                  placeholder="Buscar por nombre completo de paciente..."
+                  v-model="searchKeyword"
+                  value=""
+                />
+                <div class="input-group-append">
+                  <button
+                    @click="searchPatient()"
+                    class="btn btn-lg btn-default"
+                  >
+                    <b-icon icon="search"></b-icon>
+                  </button>
                 </div>
+              </div>
             </div>
-            <div v-if="show" class="row mt-3">
-                <div class="col-md-10 offset-md-1">
-                    <div class="list-group">
-                        <div class="list-group-item">
-                            <div class="row">
-                                <div class="content">
-                                  <div class="container-fluid">
-                                    <div class="row">
-                                      <div class="col-md-4">
-                                        <!-- Profile Image -->
-                                        <div class="card card-primary card-outline">
-                                          <div class="card-body box-profile">
-                                            <div class="text-center">
-                                              <!-- <img class="profile-user-img img-fluid img-circle"
+          </div>
+          <b-overlay
+            v-if="overlayShow"
+            :show="overlayShow"
+            class="overlay"
+            rounded="sm"
+          >
+          </b-overlay>
+          <div v-if="patientList" class="patient">
+            <b-table :fields="fields" :items="listPatients">
+              <template #cell(id)="data">
+                <span class="btn" @click="patientInfo(data.value)">{{
+                  data.value
+                }}</span>
+              </template>
+            </b-table>
+          </div>
+          <div v-if="show" class="row mt-3">
+            <div class="col-md-10 offset-md-1">
+              <div class="list-group">
+                <div class="list-group-item">
+                  <div class="row">
+                    <div class="content">
+                      <div class="container-fluid">
+                        <div class="row">
+                          <div class="col-md-3">
+                            <!-- Profile Image -->
+                            <div class="card card-primary card-outline">
+                              <div class="card-body box-profile">
+                                <div class="text-center">
+                                  <!-- <img class="profile-user-img img-fluid img-circle"
                                                   src="../../dist/img/user4-128x128.jpg"
                                                   alt="User profile picture"> -->
-                                            </div>
+                                </div>
 
-                                            <h3 class="profile-username text-center">Geovanny Leonel De Leon Diaz</h3>
+                                <h3 class="profile-username text-center">
+                                  {{nombreCompleto}}
+                                </h3>
 
-                                            <p class="text-muted text-center">Software Engineer</p>
+                                <!-- <p class="text-muted text-center">
+                                  Software Engineer
+                                </p> -->
 
-                                            <ul class="list-group list-group-unbordered mb-3">
-                                              <li class="list-group-item">
-                                                <b>Clave del Paciente</b> <a class="float-right">10322</a>
-                                              </li>
-                                              <li class="list-group-item">
-                                                <b>Apellido Paterno</b> <a class="float-right">De Leon</a>
-                                              </li>
-                                              <li class="list-group-item">
-                                                <b>Apellido Materno</b> <a class="float-right">Diaz</a>
-                                              </li>
-                                            </ul>
-                                          </div>
-                                          <!-- /.card-body -->
-                                        </div>
-                                        <!-- /.card -->
-                                        
-
-                                        <!-- About Me Box -->
-                                        <!-- <div class="card card-primary">
-                                          <div class="card-header">
-                                            <h3 class="card-title">Datos Generales</h3>
-                                          </div>
-                                          <div class="tab-pane" id="settings">
-                                                <form class="form-horizontal">
-                                                  <div class="form-group row">
-                                                    <label for="inputName" class="col-sm-2 col-form-label">Clave del Paciente:</label>
-                                                    <div class="col-sm-10">
-                                                      <input type="email" class="form-control" id="inputName" placeholder="Clave">
-                                                    </div>
-                                                  </div>
-                                                  <div class="form-group row">
-                                                    <label for="inputEmail" class="col-sm-2 col-form-label">Apellido Paterno:</label>
-                                                    <div class="col-sm-10">
-                                                      <input type="email" class="form-control" id="inputEmail" placeholder="Apellido Paterno">
-                                                    </div>
-                                                  </div>
-                                                  <div class="form-group row">
-                                                    <label for="inputName2" class="col-sm-2 col-form-label">Apellido Materno:</label>
-                                                    <div class="col-sm-10">
-                                                      <input type="text" class="form-control" id="inputName2" placeholder="Apellido Materno">
-                                                    </div>
-                                                  </div>
-                                                  <div class="form-group row">
-                                                    <label for="inputSkills" class="col-sm-2 col-form-label">Nombre:</label>
-                                                    <div class="col-sm-10">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Nombre">
-                                                    </div>
-                                                  </div>
-                                                  <div class="form-group row">
-                                                    <label for="inputSkills" class="col-sm-2 col-form-label">Le gusta que le llamen:</label>
-                                                    <div class="col-sm-10">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Le gusta que le llamen">
-                                                    </div>
-                                                  </div>
-                                                  <div class="form-group row">
-                                                    <label for="inputExperience" class="col-sm-2 col-form-label">Fecha de Nacimiento:</label>
-                                                    <div class="col-sm-10">
-                                                      <textarea class="form-control" id="inputExperience" placeholder="Fecha de Nacimiento"></textarea>
-                                                  </div> 
-                                                  </div>
-                                                  <div class="form-group row">
-                                                    <label for="inputSkills" class="col-sm-2 col-form-label">Planes/Convenios:</label>
-                                                    <div class="col-sm-10">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Planes/Convenios">
-                                                    </div>
-                                                  </div>
-                                                  <div class="form-group row">
-                                                    <label for="inputSkills" class="col-sm-2 col-form-label">Odontologo de Cabecera:</label>
-                                                    <div class="col-sm-10">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Odontologo de Cabecera">
-                                                    </div>
-                                                  </div>
-                                                  <div class="card-header">
-                                                    <h3 class="card-title">Información de Contacto</h3>
-                                                  </div>
-
-                                                  <div class="form-group row">
-                                                    <label for="inputSkills" class="col-sm-2 col-form-label">Horario de Contacto:</label>
-                                                    <div class="col-sm-10">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Entre 00:00:00 y las 00:00:00">
-                                                    </div>
-                                                  </div>
-                                                  <div class="form-group row">
-                                                    <label for="inputSkills" class="col-sm-2 col-form-label">Correo(s) Electronico(s):</label>
-                                                    <div class="col-sm-10">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Correo Electronico 1">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Correo Electronico 2">
-                                                    </div>
-                                                  </div>
-                                                  <div class="form-group row">
-                                                    <label for="inputSkills" class="col-sm-2 col-form-label">Telefono(s):</label>
-                                                    <div class="col-sm-10">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Telefono 1">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Telefono 2">
-                                                    </div>
-                                                  </div>
-                                                  <div class="form-group row">
-                                                    <label for="inputSkills" class="col-sm-2 col-form-label">Facebook, Twitter, Otro:</label>
-                                                    <div class="col-sm-10">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Facebook">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Twitter">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Otro">
-                                                    </div>
-                                                  </div>
-                                                  <div class="form-group row">
-                                                    <label for="inputSkills" class="col-sm-2 col-form-label">Medio favorito:</label>
-                                                    <div class="col-sm-10">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Correo Electronico">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Telefono 1">
-                                                      <input type="text" class="form-control" id="inputSkills" placeholder="Telefono 2">
-                                                    </div>
-                                                  </div>
-                                                </form>
-                                              </div> -->
-                                              
-                                          
-                                          <!-- /.card-body -->
-                                        <!-- </div> --> 
-                                        <!-- /.card -->
-                                      </div>
-                                      <!-- /.col -->
-                                      <div class="col-md-8">
-                                        <!-- <div class="card"> -->
-                                          <div class="card-header p-2">
-                                            <b-tabs content-class="mt-3 nav nav-pills">
-                                              <b-tab class="nav-item" title="Presupuesto">
-                                                <div class="card-body">
-                                                  <div class="tab-content">
-                                                    <b-table striped hover :items="presupuesto"></b-table>
-                                                    <b-table striped hover :items="sesiones"></b-table>
-                                                  </div>
-                                                  <!-- /.tab-content -->
-                                                </div><!-- /.card-body -->
-                                              </b-tab>
-                                              <b-tab class="nav-item" title="Documentos">
-                                                <div class="card-body">
-                                                  <div class="tab-content">
-                                                    <b-table striped hover :items="documentos"></b-table>
-                                                    <b-table striped hover :items="sesiones"></b-table>
-                                                  </div>
-                                                  <!-- /.tab-content -->
-                                                </div><!-- /.card-body -->
-                                              </b-tab>
-                                              <b-tab class="nav-item" title="Sesiones">
-                                                <div class="card-body">
-                                                  <div class="tab-content">
-                                                    <b-table striped hover :items="sesiones"></b-table>
-                                                  </div>
-                                                  <!-- /.tab-content -->
-                                                </div><!-- /.card-body -->
-                                              </b-tab>
-                                            </b-tabs>
-                                          </div><!-- /.card-header -->
-                                          
-                                        <!-- </div> -->
-                                        <!-- /.card -->
-                                      </div>
-                                      <!-- /.col -->
-                                    </div>
-                                    <!-- /.row -->
-                                  </div><!-- /.container-fluid -->
-                                </div>                                
+                                <ul
+                                  class="
+                                    list-group list-group-unbordered
+                                    mb-3
+                                    data
+                                  "
+                                >
+                                  <li class="list-group-item">
+                                    <b>Clave del Paciente</b>
+                                    <a class="float-right">10322</a>
+                                  </li>
+                                  <li class="list-group-item">
+                                    <b>Apellido Paterno</b>
+                                    <a class="float-right">De Leon</a>
+                                  </li>
+                                  <li class="list-group-item">
+                                    <b>Apellido Materno</b>
+                                    <a class="float-right">Diaz</a>
+                                  </li>
+                                  <li class="list-group-item">
+                                    <b>Nombre</b>
+                                    <a class="float-right">Diaz</a>
+                                  </li>
+                                </ul>
+                              </div>
+                              <!-- /.card-body -->
                             </div>
+                          </div>
+                          <!-- /.col -->
+                          <div class="col-md-9">
+                            <!-- <div class="card"> -->
+                            <div class="card-header p-2">
+                              <b-tabs content-class="mt-3 nav nav-pills">
+                                <b-tab class="nav-item" title="Presupuesto" disabled>
+                                  <div class="card-body">
+                                    <div class="tab-content">
+                                      <b-table 
+                                        fixed: true
+                                        striped
+                                        hover
+                                        :items="presupuesto"
+                                      ></b-table>
+                                    </div>
+                                    <!-- /.tab-content -->
+                                  </div>
+                                  <!-- /.card-body -->
+                                </b-tab>
+                                <b-tab class="nav-item" title="Documentos">
+                                  <div class="card-body">
+                                    <div class="tab-content">
+                                      <b-table
+                                        fixed: true
+                                        striped
+                                        hover
+                                        :items="documentos"
+                                      ></b-table>
+                                    </div>
+                                    <!-- /.tab-content -->
+                                  </div>
+                                  <!-- /.card-body -->
+                                </b-tab>
+                                <b-tab class="nav-item" title="Sesiones">
+                                  <div class="card-body">
+                                    <div class="tab-content">
+                                      <b-table
+                                        fixed: true
+                                        striped
+                                        hover
+                                        :items="sesiones"
+                                      ></b-table>
+                                    </div>
+                                    <!-- /.tab-content -->
+                                  </div>
+                                  <!-- /.card-body -->
+                                </b-tab>
+                              </b-tabs>
+                            </div>
+                            <!-- /.card-header -->
+
+                            <!-- </div> -->
+                            <!-- /.card -->
+                          </div>
+                          <!-- /.col -->
                         </div>
+                        <!-- /.row -->
+                      </div>
+                      <!-- /.container-fluid -->
                     </div>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
-    </section>    
-    
-    <!-- Main content -->
-    
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-  <footer class="main-footer">
-    <div class="float-right d-none d-sm-block">
-      <b>Version</b> 1.1.0
+      </section>
+
+      <!-- Main content -->
+
+      <!-- /.content -->
     </div>
-    <strong>Copyright &copy; 2022 <a href="https://dentalia.com">dentalia.com</a>.</strong> Todos los derechos reservados.
-  </footer>
-  <!-- /.control-sidebar -->
-</div>
-<!-- ./wrapper -->
+
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+      <div class="float-right d-none d-sm-block"><b>Version</b> 1.1.0</div>
+      <strong
+        >Copyright &copy; 2022
+        <a href="https://dentalia.com">dentalia.com</a>.</strong
+      >
+      Todos los derechos reservados.
+    </footer>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
 </template>
 <script>
-import C_Nav from '@/views/Nav.vue'
+import C_Nav from "@/views/Nav.vue";
 export default {
-  name: 'C_Landing',  
+  name: "C_Landing",
   components: {
-    C_Nav
+    C_Nav,
   },
-   data() {
-      return {
-        presupuesto: [
-          { No: 40, first_name: '20/07/21', last_name: '$0' },
-          { No: 21, first_name: 'Larsen', last_name: 'Shaw' },
-          { No: 89, first_name: 'Geneva', last_name: 'Wilson' },
-          { No: 38, first_name: 'Jami', last_name: 'Carney' }
-        ],
-        documentos: [
-          { No: 40, Fecha: '20/07/21', Importe: '$0', Total: '00', Saldo: '000', Sesion: '4', Clinica: '09', Clave: 'GG' },
-          { No: 21, Fecha: 'Larsen', Importe: 'Shaw', Total: '01', Saldo: '004', Sesion: '5', Clinica: '10', Clave: 'GH' },
-          { No: 89, Fecha: 'Geneva', Importe: 'Wilson', Total: '02', Saldo: '005', Sesion: '6', Clinica: '11', Clave: 'GJ' },
-          { No: 38, Fecha: 'Jami', Importe: 'Carney', Total: '03', Saldo: '006', Sesion: '7', Clinica: '12', Clave: 'GK' }
-        ],
-        sesiones: [
-          { Fecha: 40, Clinica: '20/07/21', Doctor: '$0', Tratamiento: 'TELECONSULTA', Observaciones: 'VER', Sup: '--', OD: '--', Sesion: '1/1', Última: 'N/A', Cant: '00', Recibo: '01' },
-          { Fecha: 21, Clinica: 'Larsen', Doctor: 'Shaw', Tratamiento: 'TELECONSULTA2', Observaciones: 'VER2', Sup: '--', OD: '--', Sesion: '1/1', Última: 'N/A2', Cant: '01', Recibo: '02' },
-          { Fecha: 89, Clinica: 'Geneva', Doctor: 'Wilson', Tratamiento: 'TELECONSULTA3', Observaciones: 'VER3', Sup: '--', OD: '--', Sesion: '1/1', Última: 'N/A3', Cant: '02', Recibo: '03' },
-          { Fecha: 38, Clinica: 'Jami', Doctor: 'Carney', Tratamiento: 'TELECONSULTA4', Observaciones: 'VER4', Sup: '--', OD: '--', Sesion: '1/1', Última: 'N/A4', Cant: '03', Recibo: '04'  }
-        ],
-        searchKeyword: '',
-        show: false
+  data() {
+    return {
+      presupuesto: [
+        { No: 40, first_name: "20/07/21", last_name: "$0" },
+      ],
+      documentos: [],
+      sesiones: [],
+      fields: [
+        "id",
+        {
+          // A column that needs custom formatting,
+          // calling formatter 'fullName' in this app
+          key: "name",
+          label: "Full Name",
+        },
+      ],
+      listPatients: [],
+      searchKeyword: "",
+      show: false,
+      overlayShow: false,
+      patientList: false,
+      patData:{
+        idPatient: '',
+        aPaterno: '',
+        aMaterno: '',
+        nombre: '',
+        nombreCompleto: '',
+        fnacimiento: '',
+        idPlan: '',
+        nombrePlan: '',
+        email: '',
+        telefono: ''
       }
+    };
+  },
+  methods: {
+    fullName(value) {
+      return `${value.first}`;
     },
-    methods: {
-      buscarPaciente() {
-        this.show = true;
-        alert('buscando...');
-      }         
-    }
-  }
+    searchPatient() {
+      var self = this;
+      self.patientList = false;
+      this.overlayShow = true;
+      // this.show = true;
+      var headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "access-control-allow-origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        // "Authorization": this.$session.get("token")
+      };
+      this.$http
+        .get(this.$url + "patient/search/" + this.searchKeyword, {
+          headers: headers,
+        })
+        .then(
+          function (response) {
+            if (Object.keys(response.data.data).length > 0) {
+              self.patientList = true;
+              var rep = response.data.data;
+              for (let index = 0; index < rep.length; index++) {
+                self.listPatients.push({
+                  name: rep[index].namePerson,
+                  id: rep[index].idPatient,
+                });
+              }
+              self.overlayShow = false;
+            } else {
+              self.$swal.fire({
+                icon: "warning",
+                title: "Vaya...",
+                text: "No se encontraron pacientes con ese nombre",
+              });
+              self.overlayShow = false;
+            }
+          },
+          function (err) {
+            console.log("err", err);
+            this.$swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Ocurrio un error al consultar a los pacientes, por favor intentalo nuevamente, si el error persiste favor de reportarlo con el administrador de sistema",
+            });
+          }
+        );
+    },
+    patientInfo(id_patient) {
+      /*traemos la info del paciente*/
+      this.overlayShow = true;
+      this.patientList = false;
+      this.show = false;
+      var self = this;      
+      var headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "access-control-allow-origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        // "Authorization": this.$session.get("token")
+      };
+      this.$http
+        .get(this.$url + "patient/search/id/" + id_patient, {
+          headers: headers,
+        })
+        .then(
+          function (response) {            
+            console.info(Object.keys(response.data.data).length);
+            if (Object.keys(response.data.data).length > 0) {
+              /*armamos los datos del paciente*/
+              var repPatData = response.data.data.patData;
+              for (let index = 0; index < repPatData.length; index++) {                                 
+                  self.patData.idPatient= repPatData[index].idPatient;
+                  self.patData.aPaterno= repPatData[index].aPaterno;
+                  self.patData.aMaterno= repPatData[index].aMaterno;
+                  self.patData.nombre= repPatData[index].nombre;
+                  self.patData.nombreCompleto= repPatData[index].nombreCompleto;
+                  self.patData.fnacimiento= repPatData[index].fnacimiento;
+                  self.patData.idPlan= repPatData[index].idPlan;
+                  self.patData.nombrePlan= repPatData[index].nombrePlan;
+                  self.patData.email= repPatData[index].email;
+                  self.patData.telefono= repPatData[index].telefono;
+              }
+
+              /*primero armamos los documentos*/
+              var repDocuments = response.data.data.patDocuments;
+              for (let index = 0; index < repDocuments.length; index++) {
+                self.documentos.push({
+                  No: repDocuments[index].file_number, 
+                  Fecha: repDocuments[index].file_date,
+                  Importe: '$ ' + repDocuments[index].file_payment,
+                  Total: '$ ' + repDocuments[index].file_amount,
+                  Saldo: '$ ' + repDocuments[index].pat_balance,
+                  Sesion:repDocuments[index].id_sesion,
+                  Clinica:repDocuments[index].cli_name,
+                  Estatus:repDocuments[index].status_id
+                });         
+              }
+
+              var repSessions = response.data.data.patSessions;
+              for (let index = 0; index < repSessions.length; index++) {
+                self.sesiones.push({
+                                Fecha: repSessions[index].file_date,
+                                Clinica: repSessions[index].cli_name,
+                                Doctor: repSessions[index].emp_abbr,
+                                Tratamiento: repSessions[index].trt_name,
+                                Observaciones: repSessions[index].file_comment,
+                                // Sup: repSessions[index].,
+                                OD: repSessions[index].tht_num,
+                                Sesion: repSessions[index].sessnum,
+                                Última: repSessions[index].lastsess == null ? 'NO' : repSessions[index].lastsess,
+                                Cant: repSessions[index].quantity,
+                                Recibo: repSessions[index].recibo,
+                              });         
+              }
+              self.overlayShow = false;
+              self.show = true;
+            } else {
+              self.$swal.fire({
+                icon: "warning",
+                title: "Vaya...",
+                text: "No se encontro informacion del paciente seleccionado, favor de reportarlo con el administrador del sistema. Id del paciente buscado: " + id_patient,
+              });
+              self.overlayShow = false;
+            }
+          },
+          function (err) {
+            console.log("err", err);
+          }
+        );
+      this.show = true;
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .content-wrapper, body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-footer, body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-header {
-    transition: margin-left 0.3s ease-in-out;
-    margin-left: 0px;
+body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav)
+  .content-wrapper,
+body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav)
+  .main-footer,
+body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav)
+  .main-header {
+  transition: margin-left 0.3s ease-in-out;
+  margin-left: 0px;
 }
 
 h3 {
@@ -290,5 +394,17 @@ li {
 }
 a {
   color: #42b983;
+}
+.overlay {
+  height: 50px;
+}
+.data {
+  text-align: initial;
+}
+.patient {
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 15px;
+  margin-top: 35px;
 }
 </style>
