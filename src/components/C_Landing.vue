@@ -290,7 +290,7 @@ export default {
           },
           function (err) {
             console.log("err", err);
-            this.$swal.fire({
+            self.$swal.fire({
               icon: "error",
               title: "Oops...",
               text: "Ocurrio un error al consultar a los pacientes, por favor intentalo nuevamente, si el error persiste favor de reportarlo con el administrador de sistema",
