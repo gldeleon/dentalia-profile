@@ -143,6 +143,7 @@
                                       <b-table
                                         fixed
                                         striped
+                                        responsive
                                         hover
                                         :items="documentos"
                                       ></b-table>
@@ -157,6 +158,7 @@
                                       <b-table
                                         fixed
                                         striped
+                                        responsive
                                         hover
                                         :items="sesiones"
                                       ></b-table>
@@ -339,7 +341,7 @@ export default {
                   self.patData.aMaterno= repPatData[index].aMaterno;
                   self.patData.nombre= repPatData[index].nombre;
                   self.patData.nombreCompleto= repPatData[index].nombreCompleto;
-                  self.patData.fnacimiento= repPatData[index].fnacimiento;
+                  self.patData.fnacimiento= self.moment(repPatData[index].fnacimiento).format('DD-MM-YYYY');
                   self.patData.idPlan= repPatData[index].idPlan;
                   self.patData.nombrePlan= repPatData[index].nombrePlan;
                   self.patData.email= repPatData[index].email;
@@ -351,7 +353,7 @@ export default {
               for (let index = 0; index < repDocuments.length; index++) {
                 self.documentos.push({
                   No: repDocuments[index].file_number, 
-                  Fecha: repDocuments[index].file_date,
+                  Fecha: self.moment(repDocuments[index].file_date).format('DD-MM-YYYY'),
                   Importe: '$ ' + repDocuments[index].file_payment == null ? 0 : repDocuments[index].file_payment,
                   Total: '$ ' + repDocuments[index].file_amount == null ? 0 : repDocuments[index].file_amount,
                   Saldo: '$ ' + repDocuments[index].pat_balance == null ? 0 : repDocuments[index].pat_balance,
@@ -364,7 +366,7 @@ export default {
               var repSessions = response.data.data.patSessions;
               for (let index = 0; index < repSessions.length; index++) {
                 self.sesiones.push({
-                                Fecha: repSessions[index].file_date,
+                                Fecha: self.moment(repSessions[index].file_date).format('DD-MM-YYYY'),
                                 Clinica: repSessions[index].cli_name,
                                 Doctor: repSessions[index].emp_abbr,
                                 Tratamiento: repSessions[index].trt_name,

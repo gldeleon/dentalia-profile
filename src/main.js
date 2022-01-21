@@ -14,6 +14,9 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import moment from 'moment';
+
+
 
 
 Vue.use(VueSweetalert2);
@@ -23,6 +26,7 @@ Vue.use(IconsPlugin)
 
 Vue.config.productionTip = false
 Vue.prototype.$http = Axios;
+Vue.prototype.moment = moment;
 // Vue.prototype.$url = "http://localhost:9001/api/";
 // Vue.prototype.$url = "http://apiperfiles.dentalia.com.mx/api/";
 Vue.prototype.$url = process.env.VUE_APP_API_URL;
