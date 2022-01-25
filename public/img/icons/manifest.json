@@ -1,5 +1,5 @@
 {
- "name": "App",
+ "name": "dentaliaProfile",
  "icons": [
   {
    "src": "\/android-icon-36x36.png",
@@ -32,8 +32,8 @@
    "density": "3.0"
   },
   {
-   "src": "\/android-icon-192x192.png",
-   "sizes": "192x192",
+   "src": "\/android-icon-180x180.png",
+   "sizes": "180x180",
    "type": "image\/png",
    "density": "4.0"
   }
