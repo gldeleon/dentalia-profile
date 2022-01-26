@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
 import Landing from '../views/Landing.vue'
+import Receipt from '../views/Receipt.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,11 @@ const routes = [
     path: '/landing',
     name: 'Landing',
     component: Landing
+  },
+  {
+    path: '/receipt',
+    name: 'Receipt',
+    component: Receipt
   }
 ]
 

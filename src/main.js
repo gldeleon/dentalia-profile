@@ -15,6 +15,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import moment from 'moment';
+import VueHtml2pdf from 'vue-html2pdf';
 
 
 
@@ -23,6 +24,7 @@ Vue.use(VueSweetalert2);
 Vue.use(VueSession)
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
+Vue.use(VueHtml2pdf)
 
 Vue.config.productionTip = false
 Vue.prototype.$http = Axios;
