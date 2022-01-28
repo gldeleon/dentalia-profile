@@ -7,12 +7,12 @@
         :enable-download="true"
         :preview-modal="true"
         :paginate-elements-by-height="1400"
-        filename="hee hee"
+        filename="recibo"
         :pdf-quality="2"
         :manual-pagination="false"
         pdf-format="letter"
         pdf-orientation="portrait"
-        pdf-content-width="1400px" 
+        pdf-content-width="900px" 
         ref="html2Pdf"
     >
     <section slot="pdf-content" class="invoice">
@@ -20,42 +20,41 @@
       <div class="row">
         <div class="col-12">
           <h2 class="page-header">
-            <i class="fas fa-globe"></i> AdminLTE, Inc.
-            <small class="float-right">Date: 2/10/2014</small>
+            <!-- <i class="fas fa-globe"></i> AdminLTE, Inc. -->
+            <!-- <small class="float-right">Date: 2/10/2014</small> -->
           </h2>
         </div>
         <!-- /.col -->
       </div>
       <!-- info row -->
       <div class="row invoice-info">
-        <div class="col-sm-4 invoice-col">
-          From
+        <div class="col-sm-5 invoice-col header">
           <address>
-            <strong>Admin, Inc.</strong><br />
-            795 Folsom Ave, Suite 600<br />
-            San Francisco, CA 94107<br />
-            Phone: (804) 123-5432<br />
-            Email: info@almasaeedstudio.com
+            <strong>Datos del paciente</strong><br /><br />
+            <p>Geovanny Leonel De Leon Diaz</p>
+            <p>10001528992</p>
           </address>
         </div>
         <!-- /.col -->
-        <div class="col-sm-4 invoice-col">
-          To
+        <div class="col-sm-5 invoice-col header">
           <address>
-            <strong>John Doe</strong><br />
-            795 Folsom Ave, Suite 600<br />
-            San Francisco, CA 94107<br />
-            Phone: (555) 539-1037<br />
-            Email: john.doe@example.com
+            <strong>Recibo No.</strong><br /><br />
+            <p>16836</p>
+            <p>Fecha: 10/05/2017</p>
           </address>
         </div>
         <!-- /.col -->
-        <div class="col-sm-4 invoice-col">
-          <b>Invoice #007612</b><br />
+        <div class="col-sm-2 invoice-col mini-text">
+          <b></b><br />
           <br />
-          <b>Order ID:</b> 4F3S8J<br />
-          <b>Payment Due:</b> 2/22/2014<br />
-          <b>Account:</b> 968-34567
+          <b>SERVICIOS DENTI CARE S.C.
+              R.F.C. SDC180921GL8</b><br />
+          <i class="text-sm-left">AV EJE 1 NORTE MOSQUETA #259 / N222
+            BUENAVISTA, , CIUDAD DE MEXICO
+            C.P. MÉXICO, CUAUHTEMOC, 06350</i><br />
+          <i class="text-sm-right">DIRECCIÓN ESTABLECIMIENTO:BUENAVISTA
+              EJE 1 NORTE MOZQUETA #259 / LOCAL N2-22, BUENAVISTA
+              CUAUHTÉMOC C.P.6350, CIUDAD DE MEXICO, MÉXICO</i>
         </div>
         <!-- /.col -->
       </div>
@@ -66,42 +65,56 @@
         <div class="col-12 table-responsive">
           <table class="table table-striped">
             <thead>
-              <tr>
-                <th>Qty</th>
-                <th>Product</th>
-                <th>Serial #</th>
-                <th>Description</th>
+              <tr class="borderstop">
+                <th>Tto / Ses</th>
+                <th>Descripción del servicio</th>
+                <th>Precio U.</th>
+                <th>Descuento porcentual</th>
+                <th>Descuento</th>
                 <th>Subtotal</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>1</td>
-                <td>Call of Duty</td>
-                <td>455-981-221</td>
-                <td>El snort testosterone trophy driving gloves handsome</td>
-                <td>$64.50</td>
+                <td class="borders"></td>
+                <td class="borders">Saldo actual</td>
+                <td class="borders">$0.00</td>
+                <td class="borders"></td>
+                <td class="borders"></td>
+                <td class="borders">$0.00</td>
               </tr>
               <tr>
-                <td>1</td>
-                <td>Need for Speed IV</td>
-                <td>247-925-726</td>
-                <td>Wes Anderson umami biodiesel</td>
-                <td>$50.00</td>
+                <td class="borders"></td>
+                <td class="borders">Tratamientos realizados el dia de hoy</td>
+                <td class="borders"></td>
+                <td class="borders"></td>
+                <td class="borders"></td>
+                <td class="borders"></td>
+              </tr>
+              <!-- ciclo de tratamientos -->
+              <tr>
+                <td class="borders">1</td>
+                <td class="borders">Limpieza</td>
+                <td class="borders">$679.00 </td>
+                <td class="borders">100%</td>
+                <td class="borders">$679.00</td>
+                <td class="borders">$0.00</td>
               </tr>
               <tr>
-                <td>1</td>
-                <td>Monsters DVD</td>
-                <td>735-845-642</td>
-                <td>Terry Richardson helvetica tousled street art master</td>
-                <td>$10.70</td>
+                <td class="borders"></td>
+                <td class="borders">Total a pagar el dia de hoy</td>
+                <td class="borders"></td>
+                <td class="borders"></td>
+                <td class="borders"></td>
+                <td class="borders">$0.00</td>
               </tr>
               <tr>
-                <td>1</td>
-                <td>Grown Ups Blue Ray</td>
-                <td>422-568-642</td>
-                <td>Tousled lomo letterpress</td>
-                <td>$25.99</td>
+                <td class="borders"></td>
+                <td class="borders">Saldo actual</td>
+                <td class="borders">$0.00</td>
+                <td class="borders"></td>
+                <td class="borders"></td>
+                <td class="borders">$0.00</td>
               </tr>
             </tbody>
           </table>
@@ -109,11 +122,11 @@
         <!-- /.col -->
       </div>
       <!-- /.row -->
-
+      <br /><br /><br />
       <div class="row">
         <!-- accepted payments column -->
         <div class="col-6">
-          <p class="lead">Payment Methods:</p>
+          <p class="lead">Cantidad con letra:</p>
           <!-- <img src="../../dist/img/credit/visa.png" alt="Visa"> -->
           <!-- <img src="../../dist/img/credit/mastercard.png" alt="Mastercard"> -->
           <!-- <img src="../../dist/img/credit/american-express.png" alt="American Express"> -->
@@ -123,32 +136,26 @@
             class="text-muted well well-sm shadow-none"
             style="margin-top: 10px"
           >
-            Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
-            weebly ning heekya handango imeem plugg dopplr jibjab, movity jajah
-            plickers sifteo edmodo ifttt zimbra.
+            Cero pesos
           </p>
         </div>
         <!-- /.col -->
         <div class="col-6">
-          <p class="lead">Amount Due 2/22/2014</p>
+          <p class="lead"></p>
 
           <div class="table-responsive">
             <table class="table">
               <tr>
                 <th style="width: 50%">Subtotal:</th>
-                <td>$250.30</td>
+                <td>$0.00</td>
               </tr>
               <tr>
-                <th>Tax (9.3%)</th>
-                <td>$10.34</td>
-              </tr>
-              <tr>
-                <th>Shipping:</th>
-                <td>$5.80</td>
+                <th>I.V.A.</th>
+                <td>$0.00</td>
               </tr>
               <tr>
                 <th>Total:</th>
-                <td>$265.24</td>
+                <td>$0.00</td>
               </tr>
             </table>
           </div>
@@ -183,40 +190,17 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav)
-  .content-wrapper,
-body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav)
-  .main-footer,
-body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav)
-  .main-header {
-  transition: margin-left 0.3s ease-in-out;
-  margin-left: 0px;
+.mini-text{
+  font-size: .6rem;
 }
-
-h3 {
-  margin: 0px 0 0;
+.header{
+  background-color: darkgrey;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+.borders{
+  border-left: 2px solid #202325;
+  border-right: 2px solid #202325;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-.overlay {
-  height: 50px;
-}
-.data {
-  text-align: initial;
-}
-.patient {
-  background-color: #fff;
-  border: 1px solid #000;
-  border-radius: 15px;
-  margin-top: 35px;
+.borderstop{
+  bordergr: 2px solid #202325;
 }
 </style>
