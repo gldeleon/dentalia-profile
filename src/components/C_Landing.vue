@@ -139,26 +139,18 @@
                                 </b-tab>
                                 <b-tab class="nav-item" title="Documentos">
                                   <div class="card-body">
-                                    <div class="tab-content">
-                                      <!-- <b-table
-                                        fixed
-                                        striped
-                                        responsive
-                                        hover
-                                        :items="documentos"
-                                      ></b-table> -->
-                                      <b-table    
-                                        fixed
-                                        striped
-                                        responsive
-                                        hover                                     
-                                        :fields="documentosFields" 
-                                        :items="documentos"
-                                      >                                      
-                                      <template #cell(Imprimir)="data">
-                                        <b-icon-printer><p @click="generateReport(data.Imprimir)"></p> </b-icon-printer>
-                                      </template>
-                                    </b-table>
+                                    <div class="tab-content">          
+                                      <b-table 
+                                      fixed
+                                      striped
+                                      responsive
+                                      hover   
+                                      :fields="documentosFields" 
+                                      :items="documentos">
+                                        <template #cell(Imprimir)="data">
+                                          <span class="btn" @click="generateReport(data.value)"><b-icon-printer></b-icon-printer></span>
+                                        </template>
+                                      </b-table>           
                                     </div>
                                     <!-- /.tab-content -->
                                   </div>
@@ -204,7 +196,7 @@
 
       <!-- /.content -->
     </div>
-    <button type="button" class="btn btn-warning" @click="generateReport()">Crear PDF</button>
+    <!-- <button type="button" class="btn btn-warning" @click="generateReport()">Crear PDF</button> -->
 
     <!-- /.content-wrapper -->
     <footer class="main-footer">
@@ -227,7 +219,7 @@
         :manual-pagination="false"
         pdf-format="letter"
         pdf-orientation="portrait"
-        pdf-content-width="1400px" 
+        pdf-content-width="70%" 
         ref="html2Pdf"
     >
     <section slot="pdf-content" class="invoice">
@@ -246,16 +238,16 @@
         <div class="col-sm-5 invoice-col header">
           <address>
             <strong>Datos del paciente</strong><br /><br />
-            <p>Geovanny Leonel De Leon Diaz</p>
-            <p>10001528992</p>
+            <p>{{receiptData.name}}</p>
+            <p>{{receiptData.id}}</p>
           </address>
         </div>
         <!-- /.col -->
         <div class="col-sm-5 invoice-col header">
           <address>
             <strong>Recibo No.</strong><br /><br />
-            <p>16836</p>
-            <p>Fecha: 10/05/2017</p>
+            <p>{{receiptData.receipt}}</p>
+            <p>Fecha: {{receiptData.date}}</p>
           </address>
         </div>
         <!-- /.col -->
@@ -280,13 +272,13 @@
         <div class="col-12 table-responsive">
           <table class="table table-striped">
             <thead>
-              <tr class="borderstop">
-                <th>Tto / Ses</th>
-                <th>Descripción del servicio</th>
-                <th>Precio U.</th>
-                <th>Descuento porcentual</th>
-                <th>Descuento</th>
-                <th>Subtotal</th>
+              <tr class="borderstopbot">
+                <th class="borderLeft borderstopbot">Tto / Ses</th>
+                <th class="borderstopbot">Descripción del servicio</th>
+                <th class="borderstopbot">Precio U.</th>
+                <th class="borderstopbot">Descuento porcentual</th>
+                <th class="borderstopbot">Descuento</th>
+                <th class="borderRigth borderstopbot">Subtotal</th>
               </tr>
             </thead>
             <tbody>
@@ -315,6 +307,7 @@
                 <td class="borders">$679.00</td>
                 <td class="borders">$0.00</td>
               </tr>
+              <!-- termina ciclo -->
               <tr>
                 <td class="borders"></td>
                 <td class="borders">Total a pagar el dia de hoy</td>
@@ -322,7 +315,7 @@
                 <td class="borders"></td>
                 <td class="borders"></td>
                 <td class="borders">$0.00</td>
-              </tr>
+              </tr>              
               <tr>
                 <td class="borders"></td>
                 <td class="borders">Saldo actual</td>
@@ -375,6 +368,12 @@
             </table>
           </div>
         </div>
+        <div>
+          <b>Observaciones:</b>          
+          <p>Para facturar este recibo ingresa a: http://facturacion.dentalia.com.mx. Sólo tienes 30 días naturales para facturarlo.
+          En caso de solicitud de reembolso, se descontarán las comisiones por uso de terminal y meses sin intereses (en caso de aplicar).
+          Si tienes dudas, quejas o sugerencias, escribenos a: comentarios@dentalia.com.mx</p>
+        </div>
         <!-- /.col -->
       </div>
       <!-- /.row -->
@@ -396,31 +395,34 @@ export default {
     return {
       presupuesto: [
         { No: 40, first_name: "20/07/21", last_name: "$0" },
-      ],
-      documentos: [],
+      ],      
       sesiones: [],
       documentosFields: [
           "No",
-          'Fecha',
-          'Importe',
-          'Total',
-          'Saldo',
-          'Sesion',
-          'Clinica',
-          'Estatus',
-          'Imprimir'
+          "Fecha",
+          "Importe",
+          "Total",
+          "Saldo",
+          "Sesion",
+          "Clinica",
+          "Estatus",
+          {
+            key: "Imprimir",
+            label: "Imprimir"
+          }
         ],
+      documentos: [],
       fields: [
         "id",
         {
           // A column that needs custom formatting,
           // calling formatter 'fullName' in this app
           key: "name",
-          label: "Full Name",
+          label: "Nombre",
         },
       ],
       listPatients: [],
-      searchKeyword: "",
+      searchKeyword: "MELISSA GARZA TAMEZ",
       show: false,
       overlayShow: false,
       patientList: false,
@@ -435,6 +437,13 @@ export default {
         nombrePlan: '',
         email: '',
         telefono: ''
+      },
+      receiptData:{
+        name: '',
+        id: '',
+        receipt: '',
+        date: '',
+        trts: []
       }
     };
   },
@@ -442,8 +451,55 @@ export default {
     fullName(value) {
       return `${value.first}`;
     },
-    generateReport() {
+    async generateReport(sessionId) {
+      // alert('oh si ' + sesionId);
+      await this.getDataReport(sessionId);
       this.$refs.html2Pdf.generatePdf();
+    },
+    async getDataReport(sessionId){
+      let self = this;
+      var headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "access-control-allow-origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        // "Authorization": this.$session.get("token")
+      };
+      await this.$http.get(this.$url + "patient/search/receipt/" + sessionId,{
+        headers: headers
+      }).then(
+          function (response) {
+            if (Object.keys(response.data.data).length > 0) {              
+              var rep = response.data.data;              
+              for (let index = 0; index < rep.length; index++) {
+                self.receiptData.name = rep[index].nombre;
+                self.receiptData.id = rep[index].id;
+                self.receiptData.receipt = rep[index].recibo;
+                self.receiptData.date = self.moment(rep[index].fecha).format('DD-MM-YYYY');
+                // self.receiptData.trts[index]['tto'] = rep[index].tto;
+                // self.receiptData.trts[index]['trtName'] = rep[index].nombreTrt;
+                // self.receiptData.trts[index]['priceU'] = rep[index].precioU;
+                // self.receiptData.trts[index]['percentajeDisc'] = rep[index].descuentoPorcentual;
+                // self.receiptData.trts[index]['discount'] = rep[index].descuento;
+                // self.receiptData.trts[index]['sub'] = rep[index].subtotal;
+              }              
+            } else {
+              self.$swal.fire({
+                icon: "warning",
+                title: "Vaya...",
+                text: "Ocurrio un problema al obtener los valores del recbio, favor de reportarlo con el administrador del sistema con la clave: SESSID" + sessionId,
+              });
+            }
+          },
+          function (err) {
+            console.log("err", err);
+            self.$swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Ocurrio un problema al obtener los valores del recbio, favor de reportarlo con el administrador del sistema con la clave: SESSID" + sessionId,
+            });
+          }
+        );
     },
     searchPatient() {
       var self = this;
@@ -460,7 +516,7 @@ export default {
       };
       this.$http
         .get(this.$url + "patient/search/" + this.searchKeyword, {
-          headers: headers,
+          headers: headers
         })
         .then(
           function (response) {
@@ -547,13 +603,13 @@ export default {
                 self.documentos.push({
                   No: repDocuments[index].file_number, 
                   Fecha: self.moment(repDocuments[index].file_date).format('DD-MM-YYYY'),
-                  Importe: '$ ' + repDocuments[index].file_payment == null ? 0 : repDocuments[index].file_payment,
-                  Total: '$ ' + repDocuments[index].file_amount == null ? 0 : repDocuments[index].file_amount,
-                  Saldo: '$ ' + repDocuments[index].pat_balance == null ? 0 : repDocuments[index].pat_balance,
+                  Importe: repDocuments[index].file_payment == null ? 0 : "$ " + repDocuments[index].file_payment,
+                  Total: repDocuments[index].file_amount == null ? 0 : "$ " + repDocuments[index].file_amount,
+                  Saldo: repDocuments[index].pat_balance == null ? 0 : "$ " + repDocuments[index].pat_balance,
                   Sesion:repDocuments[index].id_sesion,
                   Clinica:repDocuments[index].cli_name,
-                  Estatus:repDocuments[index].status_id,
-                  Imprimir: repDocuments[index].file_number
+                  Estatus:repDocuments[index].status_id == 1 ? "--" : "C",
+                  Imprimir: repDocuments[index].id_sesion
                 });         
               }
               /**armamos sessiones */
@@ -641,7 +697,17 @@ a {
   border-left: 2px solid #202325;
   border-right: 2px solid #202325;
 }
-.borderstop{
-  bordergr: 2px solid #202325;
+.borderstopbot{
+  border-top: 2px solid #202325;
+  border-bottom: 2px solid #202325;
+}
+.borderLeft{
+  border-left: 2px solid #202325;
+}
+.invoice{
+  margin-left: -250px !important;
+}
+.borderRigth{
+  border-right: 2px solid #202325;
 }
 </style>

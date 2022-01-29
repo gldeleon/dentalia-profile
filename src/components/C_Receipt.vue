@@ -6,27 +6,19 @@
         :float-layout="false"
         :enable-download="true"
         :preview-modal="true"
-        :paginate-elements-by-height="1400"
+        :paginate-elements-by-height="3000"
         filename="recibo"
         :pdf-quality="2"
         :manual-pagination="false"
         pdf-format="letter"
         pdf-orientation="portrait"
-        pdf-content-width="900px" 
+        pdf-content-width="70%"
+        @progress="onProgress($event)"
+        @hasStartedGeneration="hasStartedGeneration()"
+        @hasGenerated="hasGenerated($event)"
         ref="html2Pdf"
     >
-    <section slot="pdf-content" class="invoice">
-      <!-- title row -->
-      <div class="row">
-        <div class="col-12">
-          <h2 class="page-header">
-            <!-- <i class="fas fa-globe"></i> AdminLTE, Inc. -->
-            <!-- <small class="float-right">Date: 2/10/2014</small> -->
-          </h2>
-        </div>
-        <!-- /.col -->
-      </div>
-      <!-- info row -->
+    <section slot="pdf-content" class="invoice">     
       <div class="row invoice-info">
         <div class="col-sm-5 invoice-col header">
           <address>
@@ -35,7 +27,6 @@
             <p>10001528992</p>
           </address>
         </div>
-        <!-- /.col -->
         <div class="col-sm-5 invoice-col header">
           <address>
             <strong>Recibo No.</strong><br /><br />
@@ -43,7 +34,6 @@
             <p>Fecha: 10/05/2017</p>
           </address>
         </div>
-        <!-- /.col -->
         <div class="col-sm-2 invoice-col mini-text">
           <b></b><br />
           <br />
@@ -55,23 +45,19 @@
           <i class="text-sm-right">DIRECCIÓN ESTABLECIMIENTO:BUENAVISTA
               EJE 1 NORTE MOZQUETA #259 / LOCAL N2-22, BUENAVISTA
               CUAUHTÉMOC C.P.6350, CIUDAD DE MEXICO, MÉXICO</i>
-        </div>
-        <!-- /.col -->
+        </div>        
       </div>
-      <!-- /.row -->
-
-      <!-- Table row -->
       <div class="row">
         <div class="col-12 table-responsive">
           <table class="table table-striped">
             <thead>
-              <tr class="borderstop">
-                <th>Tto / Ses</th>
-                <th>Descripción del servicio</th>
-                <th>Precio U.</th>
-                <th>Descuento porcentual</th>
-                <th>Descuento</th>
-                <th>Subtotal</th>
+              <tr class="borderstopbot">
+                <th class="borderLeft borderstopbot">Tto / Ses</th>
+                <th class="borderstopbot">Descripción del servicio</th>
+                <th class="borderstopbot">Precio U.</th>
+                <th class="borderstopbot">Descuento porcentual</th>
+                <th class="borderstopbot">Descuento</th>
+                <th class="borderRigth borderstopbot">Subtotal</th>
               </tr>
             </thead>
             <tbody>
@@ -90,8 +76,7 @@
                 <td class="borders"></td>
                 <td class="borders"></td>
                 <td class="borders"></td>
-              </tr>
-              <!-- ciclo de tratamientos -->
+              </tr>              
               <tr>
                 <td class="borders">1</td>
                 <td class="borders">Limpieza</td>
@@ -119,19 +104,11 @@
             </tbody>
           </table>
         </div>
-        <!-- /.col -->
       </div>
-      <!-- /.row -->
       <br /><br /><br />
       <div class="row">
-        <!-- accepted payments column -->
         <div class="col-6">
           <p class="lead">Cantidad con letra:</p>
-          <!-- <img src="../../dist/img/credit/visa.png" alt="Visa"> -->
-          <!-- <img src="../../dist/img/credit/mastercard.png" alt="Mastercard"> -->
-          <!-- <img src="../../dist/img/credit/american-express.png" alt="American Express"> -->
-          <!-- <img src="../../dist/img/credit/paypal2.png" alt="Paypal"> -->
-
           <p
             class="text-muted well well-sm shadow-none"
             style="margin-top: 10px"
@@ -160,9 +137,7 @@
             </table>
           </div>
         </div>
-        <!-- /.col -->
       </div>
-      <!-- /.row -->
     </section>
     </vue-html2pdf>
   </div>
@@ -200,7 +175,17 @@ export default {
   border-left: 2px solid #202325;
   border-right: 2px solid #202325;
 }
-.borderstop{
-  bordergr: 2px solid #202325;
+.borderstopbot{
+  border-top: 2px solid #202325;
+  border-bottom: 2px solid #202325;
+}
+.borderLeft{
+  border-left: 2px solid #202325;
+}
+.invoice{
+  margin-left: -250px !important;
+}
+.borderRigth{
+  border-right: 2px solid #202325;
 }
 </style>
