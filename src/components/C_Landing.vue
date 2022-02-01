@@ -422,7 +422,7 @@ export default {
         },
       ],
       listPatients: [],
-      searchKeyword: "MELISSA GARZA TAMEZ",
+      searchKeyword: "",
       show: false,
       overlayShow: false,
       patientList: false,

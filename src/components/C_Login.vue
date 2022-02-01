@@ -73,8 +73,8 @@ export default {
     data() {
         return {
           form: {
-            user: 'sysadmin@dentalia.com',
-            pwd: 'masterkey'
+            user: '',
+            pwd: ''
           }
         }
     },
