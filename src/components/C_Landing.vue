@@ -211,7 +211,7 @@
       <vue-html2pdf
         :show-layout="false"
         :float-layout="true"
-        :enable-download="true"
+        :enable-download="false"
         :preview-modal="true"
         :paginate-elements-by-height="1400"
         filename="hee hee"
@@ -259,9 +259,9 @@
           <i class="text-sm-left">AV EJE 1 NORTE MOSQUETA #259 / N222
             BUENAVISTA, , CIUDAD DE MEXICO
             C.P. MÉXICO, CUAUHTEMOC, 06350</i><br />
-          <i class="text-sm-right">DIRECCIÓN ESTABLECIMIENTO:BUENAVISTA
+          <!-- <i class="text-sm-right">DIRECCIÓN ESTABLECIMIENTO:BUENAVISTA
               EJE 1 NORTE MOZQUETA #259 / LOCAL N2-22, BUENAVISTA
-              CUAUHTÉMOC C.P.6350, CIUDAD DE MEXICO, MÉXICO</i>
+              CUAUHTÉMOC C.P.6350, CIUDAD DE MEXICO, MÉXICO</i> -->
         </div>
         <!-- /.col -->
       </div>
@@ -284,11 +284,11 @@
             <tbody>
               <tr>
                 <td class="borders"></td>
-                <td class="borders">Saldo actual</td>
-                <td class="borders">$0.00</td>
                 <td class="borders"></td>
                 <td class="borders"></td>
-                <td class="borders">$0.00</td>
+                <td class="borders"></td>
+                <td class="borders"></td>
+                <td class="borders"></td>
               </tr>
               <tr>
                 <td class="borders"></td>
@@ -299,13 +299,13 @@
                 <td class="borders"></td>
               </tr>
               <!-- ciclo de tratamientos -->
-              <tr>
-                <td class="borders">1</td>
-                <td class="borders">Limpieza</td>
-                <td class="borders">$679.00 </td>
-                <td class="borders">100%</td>
-                <td class="borders">$679.00</td>
-                <td class="borders">$0.00</td>
+              <tr v-for="(trt, index) in trts" :key="index">
+                <td class="borders">{{trt.tto}}</td>
+                <td class="borders">{{trt.trtName}}</td>
+                <td class="borders">${{trt.priceU}}</td>
+                <td class="borders">{{trt.percentajeDisc}}%</td>
+                <td class="borders">${{trt.discount}}</td>
+                <td class="borders">${{trt.sub}}</td>
               </tr>
               <!-- termina ciclo -->
               <tr>
@@ -314,15 +314,15 @@
                 <td class="borders"></td>
                 <td class="borders"></td>
                 <td class="borders"></td>
-                <td class="borders">$0.00</td>
+                <td class="borders">${{totales}}</td>
               </tr>              
               <tr>
                 <td class="borders"></td>
-                <td class="borders">Saldo actual</td>
-                <td class="borders">$0.00</td>
                 <td class="borders"></td>
                 <td class="borders"></td>
-                <td class="borders">$0.00</td>
+                <td class="borders"></td>
+                <td class="borders"></td>
+                <td class="borders"></td>
               </tr>
             </tbody>
           </table>
@@ -334,18 +334,18 @@
       <div class="row">
         <!-- accepted payments column -->
         <div class="col-6">
-          <p class="lead">Cantidad con letra:</p>
+          <!-- <p class="lead">Cantidad con letra:</p> -->
           <!-- <img src="../../dist/img/credit/visa.png" alt="Visa"> -->
           <!-- <img src="../../dist/img/credit/mastercard.png" alt="Mastercard"> -->
           <!-- <img src="../../dist/img/credit/american-express.png" alt="American Express"> -->
           <!-- <img src="../../dist/img/credit/paypal2.png" alt="Paypal"> -->
 
-          <p
+          <!-- <p
             class="text-muted well well-sm shadow-none"
             style="margin-top: 10px"
           >
             Cero pesos
-          </p>
+          </p> -->
         </div>
         <!-- /.col -->
         <div class="col-6">
@@ -355,7 +355,7 @@
             <table class="table">
               <tr>
                 <th style="width: 50%">Subtotal:</th>
-                <td>$0.00</td>
+                <td>$ {{totales}}</td>
               </tr>
               <tr>
                 <th>I.V.A.</th>
@@ -363,7 +363,7 @@
               </tr>
               <tr>
                 <th>Total:</th>
-                <td>$0.00</td>
+                <td>$ {{totales}}</td>
               </tr>
             </table>
           </div>
@@ -442,9 +442,10 @@ export default {
         name: '',
         id: '',
         receipt: '',
-        date: '',
-        trts: []
-      }
+        date: '',        
+      },
+      trts: [],
+      totales: 0
     };
   },
   methods: {
@@ -469,20 +470,23 @@ export default {
         headers: headers
       }).then(
           function (response) {
+            /**primero seteamos todo a void */
+            self.receiptData.name= '';
+            self.receiptData.id = '';
+            self.receiptData.receipt = '';
+            self.receiptData.date = '';
+            self.trts = [];            
+            self.totales = 0;
             if (Object.keys(response.data.data).length > 0) {              
-              var rep = response.data.data;              
+              let rep = response.data.data;                            
               for (let index = 0; index < rep.length; index++) {
                 self.receiptData.name = rep[index].nombre;
                 self.receiptData.id = rep[index].id;
                 self.receiptData.receipt = rep[index].recibo;
                 self.receiptData.date = self.moment(rep[index].fecha).format('DD-MM-YYYY');
-                // self.receiptData.trts[index]['tto'] = rep[index].tto;
-                // self.receiptData.trts[index]['trtName'] = rep[index].nombreTrt;
-                // self.receiptData.trts[index]['priceU'] = rep[index].precioU;
-                // self.receiptData.trts[index]['percentajeDisc'] = rep[index].descuentoPorcentual;
-                // self.receiptData.trts[index]['discount'] = rep[index].descuento;
-                // self.receiptData.trts[index]['sub'] = rep[index].subtotal;
-              }              
+                self.totales = self.totales + rep[index].subtotal;
+                self.trts.push({'tto': rep[index].tto, 'trtName': rep[index].nombreTrt, 'priceU': rep[index].precioU, 'percentajeDisc': rep[index].descuentoPorcentual, 'discount':rep[index].descuento, 'sub':rep[index].subtotal});                
+              }
             } else {
               self.$swal.fire({
                 icon: "warning",
