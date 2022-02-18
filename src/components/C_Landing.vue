@@ -71,7 +71,7 @@
                                 </h3>
 
                                 <p class="text-muted text-center">
-                                  
+
                                 </p>
 
                                 <ul
@@ -126,7 +126,7 @@
                                 <b-tab class="nav-item" title="Presupuesto" disabled>
                                   <div class="card-body">
                                     <div class="tab-content">
-                                      <b-table 
+                                      <b-table
                                         fixed
                                         striped
                                         hover
@@ -139,18 +139,18 @@
                                 </b-tab>
                                 <b-tab class="nav-item" title="Documentos">
                                   <div class="card-body">
-                                    <div class="tab-content">          
-                                      <b-table 
+                                    <div class="tab-content">
+                                      <b-table
                                       fixed
                                       striped
                                       responsive
-                                      hover   
-                                      :fields="documentosFields" 
+                                      hover
+                                      :fields="documentosFields"
                                       :items="documentos">
                                         <template #cell(Imprimir)="data">
                                           <span class="btn" @click="generateReport(data.value)"><b-icon-printer></b-icon-printer></span>
                                         </template>
-                                      </b-table>           
+                                      </b-table>
                                     </div>
                                     <!-- /.tab-content -->
                                   </div>
@@ -207,7 +207,7 @@
       >
       Todos los derechos reservados.
     </footer>
-    <!-- /.control-sidebar -->    
+    <!-- /.control-sidebar -->
       <vue-html2pdf
         :show-layout="false"
         :float-layout="true"
@@ -219,7 +219,7 @@
         :manual-pagination="false"
         pdf-format="letter"
         pdf-orientation="portrait"
-        pdf-content-width="70%" 
+        pdf-content-width="70%"
         ref="html2Pdf"
     >
     <section slot="pdf-content" class="invoice">
@@ -307,7 +307,7 @@
                 <td class="borders">${{trt.discount}}</td>
                 <td class="borders">${{trt.sub}}</td>
               </tr>
-              <!-- termina ciclo -->
+              <!-- termina ciclo -->              
               <tr>
                 <td class="borders"></td>
                 <td class="borders">Total a pagar el dia de hoy</td>
@@ -315,14 +315,14 @@
                 <td class="borders"></td>
                 <td class="borders"></td>
                 <td class="borders">${{totales}}</td>
-              </tr>              
+              </tr>
               <tr>
                 <td class="borders"></td>
+                <td class="borders">Saldo actual</td>
+                <td class="borders">${{balance}}</td>
                 <td class="borders"></td>
                 <td class="borders"></td>
-                <td class="borders"></td>
-                <td class="borders"></td>
-                <td class="borders"></td>
+                <td class="borders">${{balance}}</td>
               </tr>
             </tbody>
           </table>
@@ -355,7 +355,7 @@
             <table class="table">
               <tr>
                 <th style="width: 50%">Subtotal:</th>
-                <td>$ {{totales}}</td>
+                <td>$ {{finalTotal}}</td>
               </tr>
               <tr>
                 <th>I.V.A.</th>
@@ -363,13 +363,13 @@
               </tr>
               <tr>
                 <th>Total:</th>
-                <td>$ {{totales}}</td>
+                <td>$ {{finalTotal}}</td>
               </tr>
             </table>
           </div>
         </div>
         <div>
-          <b>Observaciones:</b>          
+          <b>Observaciones:</b>
           <p>Para facturar este recibo ingresa a: http://facturacion.dentalia.com.mx. Sólo tienes 30 días naturales para facturarlo.
           En caso de solicitud de reembolso, se descontarán las comisiones por uso de terminal y meses sin intereses (en caso de aplicar).
           Si tienes dudas, quejas o sugerencias, escribenos a: comentarios@dentalia.com.mx</p>
@@ -395,7 +395,9 @@ export default {
     return {
       presupuesto: [
         { No: 40, first_name: "20/07/21", last_name: "$0" },
-      ],      
+      ],
+      balance: '',
+      finalTotal: '',
       sesiones: [],
       documentosFields: [
           "No",
@@ -442,7 +444,7 @@ export default {
         name: '',
         id: '',
         receipt: '',
-        date: '',        
+        date: '',
       },
       trts: [],
       totales: 0
@@ -475,17 +477,20 @@ export default {
             self.receiptData.id = '';
             self.receiptData.receipt = '';
             self.receiptData.date = '';
-            self.trts = [];            
+            self.trts = [];
             self.totales = 0;
-            if (Object.keys(response.data.data).length > 0) {              
-              let rep = response.data.data;                            
+            if (Object.keys(response.data.data).length > 0) {
+              let rep = response.data.data;
+              console.info(response.data.data);
               for (let index = 0; index < rep.length; index++) {
                 self.receiptData.name = rep[index].nombre;
                 self.receiptData.id = rep[index].id;
                 self.receiptData.receipt = rep[index].recibo;
                 self.receiptData.date = self.moment(rep[index].fecha).format('DD-MM-YYYY');
-                self.totales = self.totales + rep[index].subtotal;
-                self.trts.push({'tto': rep[index].tto, 'trtName': rep[index].nombreTrt, 'priceU': rep[index].precioU, 'percentajeDisc': rep[index].descuentoPorcentual, 'discount':rep[index].descuento, 'sub':rep[index].subtotal});                
+                self.totales = self.totales + rep[index].subtotal;                
+                self.balance = rep[index].balance;
+                self.finalTotal = self.totales + self.balance;
+                self.trts.push({'tto': rep[index].tto, 'trtName': rep[index].nombreTrt, 'priceU': rep[index].precioU, 'percentajeDisc': rep[index].descuentoPorcentual, 'discount':rep[index].descuento, 'sub':rep[index].subtotal});
               }
             } else {
               self.$swal.fire({
@@ -509,7 +514,7 @@ export default {
       var self = this;
       this.patientList = false;
       this.overlayShow = true;
-      this.show = false;      
+      this.show = false;
       this.listPatients = [];
       var headers = {
         "Content-Type": "application/json",
@@ -526,11 +531,11 @@ export default {
           function (response) {
             if (Object.keys(response.data.data).length > 0) {
               self.patientList = true;
-              var rep = response.data.data;              
+              var rep = response.data.data;
               for (let index = 0; index < rep.length; index++) {
                 self.listPatients.push({
                   name: rep[index].namePerson,
-                  id: rep[index].idPatient                  
+                  id: rep[index].idPatient
                 });
               }
               self.overlayShow = false;
@@ -554,9 +559,9 @@ export default {
         );
     },
     patientInfo(id_patient) {
-      /*traemos la info del paciente*/      
+      /*traemos la info del paciente*/
       this.overlayShow = true;
-      this.patientList = false;      
+      this.patientList = false;
       this.patData.idPatient= '';
       this.patData.aPaterno= '';
       this.patData.aMaterno= '';
@@ -569,7 +574,7 @@ export default {
       this.patData.telefono='';
       this.documentos = [];
       this.sesiones = [];
-      var self = this;      
+      var self = this;
 
       var headers = {
         "Content-Type": "application/json",
@@ -583,12 +588,12 @@ export default {
           headers: headers,
         })
         .then(
-          function (response) {            
+          function (response) {
             console.info(Object.keys(response.data.data).length);
             if (Object.keys(response.data.data).length > 0) {
               /*armamos los datos del paciente*/
               var repPatData = response.data.data.patData;
-              for (let index = 0; index < repPatData.length; index++) {                                 
+              for (let index = 0; index < repPatData.length; index++) {
                   self.patData.idPatient= repPatData[index].idPatient;
                   self.patData.aPaterno= repPatData[index].aPaterno;
                   self.patData.aMaterno= repPatData[index].aMaterno;
@@ -605,7 +610,7 @@ export default {
               var repDocuments = response.data.data.patDocuments;
               for (let index = 0; index < repDocuments.length; index++) {
                 self.documentos.push({
-                  No: repDocuments[index].file_number, 
+                  No: repDocuments[index].file_number,
                   Fecha: self.moment(repDocuments[index].file_date).format('DD-MM-YYYY'),
                   Importe: repDocuments[index].file_payment == null ? 0 : "$ " + repDocuments[index].file_payment,
                   Total: repDocuments[index].file_amount == null ? 0 : "$ " + repDocuments[index].file_amount,
@@ -614,7 +619,7 @@ export default {
                   Clinica:repDocuments[index].cli_name,
                   Estatus:repDocuments[index].status_id == 1 ? "--" : "C",
                   Imprimir: repDocuments[index].id_sesion
-                });         
+                });
               }
               /**armamos sessiones */
               var repSessions = response.data.data.patSessions;
@@ -631,7 +636,7 @@ export default {
                       Última: repSessions[index].lastsess == null ? 'NO' : repSessions[index].lastsess,
                       Cant: repSessions[index].quantity,
                       Recibo: repSessions[index].recibo
-                    });         
+                    });
               }
               self.overlayShow = false;
               self.show = true;
