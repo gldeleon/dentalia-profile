@@ -284,11 +284,11 @@
             <tbody>
               <tr>
                 <td class="borders"></td>
+                <td class="borders">Saldo actual</td>
+                <td class="borders">${{receiptData.balance}}</td>
                 <td class="borders"></td>
                 <td class="borders"></td>
-                <td class="borders"></td>
-                <td class="borders"></td>
-                <td class="borders"></td>
+                <td class="borders">${{receiptData.balance}}</td>
               </tr>
               <tr>
                 <td class="borders"></td>
@@ -318,7 +318,7 @@
               </tr>
               <tr>
                 <td class="borders"></td>
-                <td class="borders">Saldo actual</td>
+                <td class="borders">Saldo actual (A favor)</td>
                 <td class="borders">${{balance}}</td>
                 <td class="borders"></td>
                 <td class="borders"></td>
@@ -445,6 +445,8 @@ export default {
         id: '',
         receipt: '',
         date: '',
+        file: '',
+        balance: ''
       },
       trts: [],
       totales: 0
@@ -480,17 +482,23 @@ export default {
             self.trts = [];
             self.totales = 0;
             if (Object.keys(response.data.data).length > 0) {
-              let rep = response.data.data;
-              console.info(response.data.data);
+              let rep = response.data.data.receiptData;
+              console.info(response.data.data.receiptData);
               for (let index = 0; index < rep.length; index++) {
                 self.receiptData.name = rep[index].nombre;
                 self.receiptData.id = rep[index].id;
                 self.receiptData.receipt = rep[index].recibo;
                 self.receiptData.date = self.moment(rep[index].fecha).format('DD-MM-YYYY');
-                self.totales = self.totales + rep[index].subtotal;                
+                self.totales = self.totales + rep[index].subtotal;                                
                 self.balance = rep[index].balance;
                 self.finalTotal = self.totales + self.balance;
                 self.trts.push({'tto': rep[index].tto, 'trtName': rep[index].nombreTrt, 'priceU': rep[index].precioU, 'percentajeDisc': rep[index].descuentoPorcentual, 'discount':rep[index].descuento, 'sub':rep[index].subtotal});
+              }
+              let rep2 = response.data.data.balanceData;
+            console.info(response.data.data.balanceData);
+              for (let index = 0; index < rep2.length; index++) {
+                self.receiptData.file = rep2[index].file_id;
+                self.receiptData.balance = rep2[index].pat_balance;
               }
             } else {
               self.$swal.fire({
